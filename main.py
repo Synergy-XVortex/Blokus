@@ -108,7 +108,7 @@ def run_game():
 
         # Ask the player to choose a piece
         try:
-            piece_choice = int(input("Choose a piece (number): ")) - 1
+            piece_choice = int(input("\033[0;37mChoose a piece (number): ")) - 1
             chosen_piece = current_player.remaining_pieces[piece_choice]
         except (ValueError, IndexError):
             print("Invalid choice. Please try again.")
@@ -121,7 +121,7 @@ def run_game():
         # Ask if the player wants to rotate or apply symmetry to the piece
         transformation_completed = False
         while not transformation_completed:
-            print("\nDo you want to perform a transformation on the piece?")
+            print("\n\033[0;37mDo you want to perform a transformation on the piece?")
             print("1. Rotate the piece 90°, -90° or 180°")
             print("2. Apply horizontal symmetry")
             print("3. No transformation, validate the piece\n")
@@ -153,7 +153,7 @@ def run_game():
 
                 elif transformation_choice == 3:
                     transformation_completed = True
-                    print("No transformation, validating the piece.")
+                    print("No transformation, validating the piece.\033[0m")
                 else:
                     print("Invalid option, no transformation performed.")
             except ValueError:
@@ -165,16 +165,16 @@ def run_game():
             display_grid(grid)
             remove_highlight_valid_placements(grid, chosen_piece, current_player)
 
-            row_input = int(input("\nEnter the row to place the piece (1-20): "))
+            row_input = int(input("\n\033[0;37mEnter the row to place the piece (1-20): "))
             col_input = ord(input("Enter the column to place the piece (A-T): ").upper()) - ord('A') + 1
 
             number_range = len(chosen_piece.shape)
             column_labels = string.ascii_uppercase[:len(chosen_piece.shape[0])]
             letter_range = column_labels[len(chosen_piece.shape[0]) - 1]
             anchor_x = int(input(f"Enter the row for the piece anchor (1-{number_range}): ")) - 1
-            anchor_y = ord(input(f"Enter the column for the piece anchor (A-{letter_range}): ").upper()) - ord('A')
+            anchor_y = ord(input(f"Enter the column for the piece anchor (A-{letter_range}): \033[0m").upper()) - ord('A')
         except ValueError:
-            print("Invalid input. Please try again.")
+            print("Invalid input. Please try again.\033[0m")
             continue
 
         # Check if it's the player's first piece
@@ -188,7 +188,7 @@ def run_game():
             place_piece(grid, chosen_piece, row_input, col_input, current_player.color, anchor_x, anchor_y)
             current_player.has_played_first_piece = True
             current_player.remaining_pieces.remove(chosen_piece)
-            print(f"Piece successfully placed by {current_player.name}!")
+            print(f"Piece successfully placed by {current_player.name}!\n")
         else:
             print(f"\n{display_color}Invalid placement. Please try again.\033[0m")
             continue
