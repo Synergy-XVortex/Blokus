@@ -25,6 +25,7 @@ def run_game():
     players = []
     used_names = []
     player_number = 1
+    blocked_players = [False] * 4  # Suivi des joueurs bloqués
 
     # Ask for the number of players
     while True:
@@ -58,7 +59,26 @@ def run_game():
     # Main game loop
     turn = 0
     while True:
-        current_player = players[turn % len(players)]
+        current_player_index = turn % len(players)
+        current_player = players[current_player_index]
+
+        # Check if the current player is blocked
+        if blocked_players[current_player_index]:
+            print(f"{current_player.name} is blocked and skips their turn.")
+            turn += 1
+
+            # Check if all players are blocked
+            if all(blocked_players):
+                print("All players are blocked. The game is over!")
+                break
+            continue
+
+        # Check if the player can make a move
+        if not can_player_play(grid, current_player):
+            print(f"{current_player.name} cannot make a move and is now blocked.")
+            blocked_players[current_player_index] = True
+            turn += 1
+            continue
 
         # Display the current player with the corresponding color
         if current_player.color == 1:
@@ -176,9 +196,9 @@ def run_game():
         # Move to the next player
         turn += 1
 
-        # End condition: If no player can play, the game ends
-        if all(not player.remaining_pieces for player in players):
-            print("The game is over!")
+        # Vérifier si tous les joueurs sont bloqués
+        if all(blocked_players):
+            print("All players are blocked. The game is over!")
             break
 
     # Calculate scores (based on remaining pieces)
@@ -192,9 +212,9 @@ def run_game():
         elif player.color == 2:
             display_color = "\033[35m"  # Purple
         elif player.color == 3:
-            display_color = "\033[31m"  # Red
+            display_color = "\033[31m"  # Green
         elif player.color == 4:
-            display_color = "\033[32m"  # Green
+            display_color = "\033[31m"  # Red
 
         print(f"{display_color}{player.name}\033[0m : {score} points")  # Reset color after display
     print("Thank you for playing!")
@@ -202,3 +222,4 @@ def run_game():
 # Program entry point
 if __name__ == "__main__":
     run_game()
+
