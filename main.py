@@ -94,7 +94,8 @@ def run_game():
         display_grid(grid)
         remove_highlight_valid_placements(grid, pieces[0], current_player)
 
-        print(f"\n{display_color}{current_player.name}, it's your turn!\033[0m")  # Reset color after display
+        print("\033[0;37m\n", 15*"-", f"Turn {turn//4 + 1}", 15*"-")
+        print(f"{display_color}{current_player.name}, it's your turn!\033[0m")  # Reset color after display
 
         # Check if the player has any remaining pieces
         if not current_player.remaining_pieces:
